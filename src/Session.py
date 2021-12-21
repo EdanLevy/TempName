@@ -1,6 +1,6 @@
 import time
 
-from client import Client
+from Client import Client
 
 
 class Session:
