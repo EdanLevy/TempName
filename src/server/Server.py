@@ -3,7 +3,7 @@ import socket
 import threading
 import time
 from Session import Session
-from Client import Client
+from Player import Player
 
 REBROADCAST_TIMEOUT = 1  # Broadcast announcement timeout after which another broadcast is sent (1 second)
 
@@ -22,6 +22,7 @@ BROADCAST_SERVER_ADDR = (SERVER_IP, BROADCAST_SRC_PORT)
 
 FORMAT = 'utf-8'  # Decode and encode format for incoming and outgoing messages
 MAX_CLIENTS = 2  # Amount of clients required to initiate a game session
+ANSWER_LENGTH = 2  # Expected length of answer messages
 
 clients: list = []
 accept_thread = None
@@ -37,7 +38,7 @@ def accept_client(connection_socket, address):
     client_name = connection_socket.recv(1024)  # First message from client is expected to be their name
     client_name = client_name.decode(FORMAT).split('\n')[0]
     if len(clients) < MAX_CLIENTS:
-        clients.append(Client(socket=connection_socket, address=address, name=client_name))
+        clients.append(Player(socket=connection_socket, address=address, name=client_name))
 
 
 # Initialize a TCP socket and begin listening for incoming connections
@@ -58,9 +59,17 @@ def listen_for_clients(server_socket):
         accept_client(conn, address)
 
 
-def send_to_client(client: Client, message: str) -> None:
+def send_to_client(client: Player, message: str) -> None:
     conn = client.socket
     conn.send(message.encode(FORMAT))
+
+
+def receive_from_client(client: Player, results: dict, callback):
+    conn = client.socket
+    message = conn.recv(ANSWER_LENGTH).decode(FORMAT)
+    # TODO - need to handle timeout
+    results[client][0] = message
+    callback(client)
 
 
 def start() -> None:
@@ -78,6 +87,13 @@ def start() -> None:
             time.sleep(REBROADCAST_TIMEOUT)
         broadcast_socket.close()
         # All clients have connected, initialize game session
-        session = Session(send_handler=send_to_client)
-        session.add_players(clients)
+        session = Session(send_handler=send_to_client, players=clients)
         session.begin_game()
+        # Disconnect clients and clear the list
+        for client in clients:
+            client.socket.close()
+        clients.clear()
+
+
+if __name__ == "__main__":
+    start()
