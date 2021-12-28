@@ -13,6 +13,7 @@ UDP_PORT = 13117
 TCP_PORT = -1
 PORT = random.randint(1024, 65535)
 HOST = socket.gethostbyname(socket.gethostname())
+FORMAT = "UTF-8"
 c_socket = None
 
 
@@ -41,7 +42,7 @@ def start_game(sock):
 
         if sock in reads:  # received an answer from server i.e. the game is over, print message, close socket
             message = sock.recv(1024)
-            print(message.decode("UTF-8"))
+            print(message.decode(FORMAT))
             sock.close()
             terminate_game = True
         elif sys.stdin in reads:
@@ -51,7 +52,7 @@ def start_game(sock):
 
 def main():
     global c_socket
-    print(f'Client started, listening on IP address {HOST}')
+    print(f'Client started, listening on IP address {HOST}:{UDP_PORT}')
     while True:
         # listen to UDP offers
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -75,6 +76,7 @@ def main():
 
         start_game(c_socket)
 
+
 # configure to a different server address to try to connect to other servers
 def configure_game(server_addr=SERVER_IP):
     global SERVER_IP
@@ -82,5 +84,7 @@ def configure_game(server_addr=SERVER_IP):
 
 
 if __name__ == "__main__":
-    configure_game(sys.argv[1])
+    if len(sys.argv) > 1:
+        print(sys.argv[1])
+        configure_game(sys.argv[1])
     main()
