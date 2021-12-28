@@ -68,6 +68,7 @@ def start_game(sock):
 
 def main():
     global c_socket
+    global SERVER_IP
     print("Client started, listening for offer requests...")
     # print(f'Listening on address {HOST} : {UDP_PORT} - debug message')  # TODO - debug message
     while True:
@@ -85,7 +86,8 @@ def main():
         # if the offer is invalid then the client continues to look for other offers
         if not result:
             continue
-        print(f"Received offer from {server_address[IP_INDEX]}, attempting to connect...")
+        SERVER_IP = server_address[IP_INDEX]
+        print(f"Received offer from {SERVER_IP}, attempting to connect...")
         # requesting a socket for tcp connection and setting it to false
         c_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:  # try to connect to server. will get excepted if server refused to establish connection
