@@ -1,4 +1,4 @@
-import threading
+import select
 import time
 import random
 
@@ -19,29 +19,16 @@ class Session:
         self.the_question = random.choice(list(self.math_questions.keys()))
         self.the_answer = self.math_questions.get(self.the_question)
         self.the_winner = None
-        self.threads = []
-        self.received_answer = False
-
-    def handle_timeout(self, callback):
-        time.sleep(self.GAME_TIMEOUT)
-        callback(None)
 
     def receive_answers(self):
-        self.threads += threading.Thread(target=self.receive_handler, args=[self.p1, self.results, self.notify_session])
-        self.threads += threading.Thread(target=self.receive_handler, args=[self.p2, self.results, self.notify_session])
-        for t in self.threads:
-            t.start()
-        threading.Thread(target=self.handle_timeout, args=[self.notify_session])
-        # TODO - handle threads that did not terminate
-        for t in self.threads:
-            t.join()
-
-    def notify_session(self, player):
-        with threading.Lock():
-            if not self.received_answer:
-                self.received_answer = True
-                # TODO - handle other thread that did not necessarily terminate
-                self.check_send_result(player)
+        read_ready, _, _ = select.select([self.p1.socket, self.p2.socket], [], [], self.GAME_TIMEOUT)
+        player = None
+        for sock in read_ready:
+            player = self.p1 if sock is self.p1.socket else self.p2
+            answer = self.receive_handler(player)
+            self.results[player][0] = answer
+            break  # Once 1 player has sent an answer, the game is decided
+        self.check_send_result(player)
 
     def send_result(self):
         pass

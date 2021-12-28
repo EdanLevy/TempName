@@ -64,12 +64,9 @@ def send_to_client(client: Player, message: str) -> None:
     conn.send(message.encode(FORMAT))
 
 
-def receive_from_client(client: Player, results: dict, callback):
-    conn = client.socket
-    message = conn.recv(ANSWER_LENGTH).decode(FORMAT)
-    # TODO - need to handle timeout
-    results[client][0] = message
-    callback(client)
+def receive_from_client(conn):
+    message = conn.recv(ANSWER_LENGTH).decode(FORMAT)  # TODO - switch to 'getch'?
+    return message
 
 
 def start() -> None:
