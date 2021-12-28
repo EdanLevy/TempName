@@ -5,15 +5,17 @@ import sys
 
 TIMEOUT = 10
 
-BROADCAST_IP = "127.0.0.255"
+BROADCAST_IP = "172.1.0.255"
+BROADCAST_IP_DEV_NETWORK = "172.1.0.255"  # Dev network
+BROADCAST_IP_TEST_NETWORK = "172.99.0.255"  # Test network - only to be used when being graded
 UDP_PORT = 13117  # Dedicated broadcast offer port
 
-SERVER_IP = "localhost"  # Dedicated server IP address - student90
-TCP_PORT = -1
+SERVER_IP = socket.gethostbyname(socket.gethostname())  # Default personal server IP address - studentXX
+TCP_PORT = -1  # Server port, undefined at first
 MIN_VALID_PORT = 0
 
 PORT = random.randint(1024, 65535)  # The port from which the client will send out messages
-HOST = socket.gethostbyname(socket.gethostname())
+HOST_IP = socket.gethostbyname(socket.gethostname())  # Acquire local host IP address
 
 IP_INDEX = 0  # In an address tuple, the IP is the first element
 
