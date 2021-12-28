@@ -2,7 +2,6 @@ import random
 import select
 import socket
 import sys
-from typing import Union
 
 TIMEOUT = 10
 
@@ -58,6 +57,7 @@ def main():
         # listen to UDP offers
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.bind((BROADCAST_IP, UDP_PORT))
         print("waiting for an offer")
         offer, address = sock.recvfrom(1024)

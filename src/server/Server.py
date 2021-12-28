@@ -1,12 +1,10 @@
 import random
 import socket
-import struct
 import threading
 import time
 
 from Session import Session
 from Player import Player
-from client.Client import MAGIC_COOKIE
 
 REBROADCAST_TIMEOUT = 1  # Broadcast announcement timeout after which another broadcast is sent (1 second)
 
@@ -34,7 +32,6 @@ accept_thread = None
 
 def send_broadcast(udp_socket):
     announcement_message = MAGIC_COOKIE + MESSAGE_TYPE + SERVER_PORT.to_bytes(2, "little")
-    print(len(announcement_message))
     print(f"broadcasting offer - {announcement_message} to: {BROADCAST_DST_ADDR}")
     udp_socket.sendto(announcement_message[:8], BROADCAST_DST_ADDR)
 
