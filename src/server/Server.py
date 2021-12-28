@@ -60,6 +60,7 @@ def open_tcp_server():
 def listen_for_clients(server_socket):
     while len(clients) < MAX_CLIENTS:
         conn, address = server_socket.accept()
+        conn.setblocking(False)
         accept_client(conn, address)
 
 
