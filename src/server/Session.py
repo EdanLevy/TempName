@@ -25,7 +25,7 @@ class Session:
         player = None
         for sock in read_ready:
             player = self.p1 if sock is self.p1.socket else self.p2
-            answer = self.receive_handler(player)
+            answer = self.receive_handler(sock)
             self.results[player][0] = answer
             break  # Once 1 player has sent an answer, the game is decided
         self.check_send_result(player)
