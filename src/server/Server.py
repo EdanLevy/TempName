@@ -22,7 +22,6 @@ BROADCAST_SERVER_ADDR = (SERVER_IP, BROADCAST_SRC_PORT)
 BROADCAST_IP = "127.0.0.255"
 BROADCAST_DST_ADDR = (BROADCAST_IP, BROADCAST_DST_PORT)
 
-FORMAT = 'utf-8'  # Decode and encode format for incoming and outgoing messages
 MAX_CLIENTS = 2  # Amount of clients required to initiate a game session
 ANSWER_LENGTH = 2  # Expected length of answer messages
 
@@ -39,7 +38,7 @@ def send_broadcast(udp_socket):
 # accept client to the session if available, and wait to start the session
 def accept_client(connection_socket, address):
     client_name = connection_socket.recv(1024)  # First message from client is expected to be their name
-    client_name = client_name.decode(FORMAT).split('\n')[0]
+    client_name = client_name.decode().split('\n')[0]
     connection_socket.setblocking(False)
     if len(clients) < MAX_CLIENTS:
         print(f"accepted client: {len(clients) + 1}")
@@ -66,11 +65,11 @@ def listen_for_clients(server_socket):
 
 def send_to_client(client: Player, message: str) -> None:
     conn = client.socket
-    conn.send(message.encode(FORMAT))
+    conn.send(message.encode())
 
 
 def receive_from_client(conn):
-    message = conn.recv(ANSWER_LENGTH).decode(FORMAT)  # TODO - switch to 'getch'?
+    message = conn.recv(ANSWER_LENGTH).decode()  # TODO - switch to 'getch'?
     return message
 
 
