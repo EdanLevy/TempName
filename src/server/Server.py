@@ -40,6 +40,7 @@ def send_broadcast(udp_socket):
 def accept_client(connection_socket, address):
     client_name = connection_socket.recv(1024)  # First message from client is expected to be their name
     client_name = client_name.decode(FORMAT).split('\n')[0]
+    connection_socket.setblocking(False)
     if len(clients) < MAX_CLIENTS:
         print(f"accepted client: {len(clients) + 1}")
         clients.append(Player(socket=connection_socket, address=address, name=client_name))
@@ -60,7 +61,6 @@ def open_tcp_server():
 def listen_for_clients(server_socket):
     while len(clients) < MAX_CLIENTS:
         conn, address = server_socket.accept()
-        conn.setblocking(False)
         accept_client(conn, address)
 
 
