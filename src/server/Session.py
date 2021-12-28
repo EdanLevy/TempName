@@ -37,7 +37,7 @@ class Session:
         for sock in read_ready:
             player = self.p1 if sock is self.p1.socket else self.p2
             answer = self.receive_handler(sock)
-            self.results.get(player)[0] = answer
+            self.results.get(player).append(answer)
             break  # Once 1 player has sent an answer, the game is decided
         self.check_send_result(player)
 
@@ -45,8 +45,7 @@ class Session:
         if p is None:
             self.the_winner = None
         else:
-            actual = int(self.results[p][0])
-
+            actual = int(self.results.get(p)[0])
             if actual == self.the_answer:
                 self.the_winner = p.name
             else:
