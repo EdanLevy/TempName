@@ -21,7 +21,7 @@ SERVER_PORT_LENGTH = 2  # Port is 2 bytes (16 bits) long
 
 SERVER_ADDR = (SERVER_IP, SERVER_PORT)
 BROADCAST_SERVER_ADDR = (SERVER_IP, BROADCAST_SRC_PORT)
-BROADCAST_IP = "172.1.0.255"
+BROADCAST_IP = "127.0.0.255"
 BROADCAST_IP_DEV_NETWORK = "172.1.0.255"  # Dev network
 BROADCAST_IP_TEST_NETWORK = "172.99.0.255"  # Test network - only to be used when being graded
 BROADCAST_DST_ADDR = (BROADCAST_IP, BROADCAST_DST_PORT)
@@ -61,6 +61,7 @@ def open_tcp_server():
     # Queue up as many as 'MAX_CLIENTS' connect requests before refusing outside connections
     server_socket.listen(MAX_CLIENTS)
     print(f'Server started, listening on IP address {SERVER_IP}')
+    print(f'Listening on port {SERVER_PORT} - debug message')  # TODO - debug message
     return server_socket
 
 

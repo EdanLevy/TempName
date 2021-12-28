@@ -5,7 +5,7 @@ import sys
 
 TIMEOUT = 10
 
-BROADCAST_IP = "172.1.0.255"
+BROADCAST_IP = "127.0.0.255"
 BROADCAST_IP_DEV_NETWORK = "172.1.0.255"  # Dev network
 BROADCAST_IP_TEST_NETWORK = "172.99.0.255"  # Test network - only to be used when being graded
 UDP_PORT = 13117  # Dedicated broadcast offer port
@@ -76,9 +76,10 @@ def main():
         offer_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         offer_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         offer_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        offer_socket.bind(('', UDP_PORT))
+        offer_socket.bind((BROADCAST_IP, UDP_PORT))
         # print("waiting for an offer - debug message")  # TODO - debug message
         offer, server_address = offer_socket.recvfrom(1024)
+        SERVER_IP = server_address[IP_INDEX]
         # print(f"incoming offer: {offer} - debug message")  # TODO - debug message
         offer_socket.close()
         # try to connect to server
@@ -87,10 +88,10 @@ def main():
         # if the offer is invalid then the client continues to look for other offers
         if not result:
             continue
-        SERVER_IP = server_address[IP_INDEX]
         # requesting a socket for tcp connection and setting it to false
         c_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:  # try to connect to server. will get excepted if server refused to establish connection
+            print(f"Server IP {SERVER_IP} TCP_PORT {TCP_PORT} - debug message")  # TODO - debug message
             c_socket.connect((SERVER_IP, TCP_PORT))
             # sends the server the client name
             c_socket.send(TEAM_NAME)
