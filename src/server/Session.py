@@ -53,7 +53,7 @@ class Session:
                 self.the_winner = self.p2.name if p == self.p1 else self.p1.name
 
     def send_result(self):
-        message = f"Game over!\nThe correct answer was  {self.the_answer}!\n\n  " \
+        message = f"Game over!\nThe correct answer was  {self.the_answer}!\n\n" \
                   f"Congratulations to the winner: {self.the_winner}\n"
         self.send_message_to_players(message)
 

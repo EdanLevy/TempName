@@ -35,17 +35,16 @@ accept_thread = None
 
 def send_broadcast(udp_socket):
     announcement_message = MAGIC_COOKIE + MESSAGE_TYPE + SERVER_PORT.to_bytes(SERVER_PORT_LENGTH, "little")
-    print(f"broadcasting offer - {announcement_message} to: {BROADCAST_DST_ADDR} - debug message")  # TODO - debug message
+    # print(f"broadcasting offer - {announcement_message} to: {BROADCAST_DST_ADDR} - debug message")  # TODO - debug message
     udp_socket.sendto(announcement_message[:OFFER_END_INDEX], BROADCAST_DST_ADDR)
 
 
 # accept client to the session if available, and wait to start the session
 def accept_client(connection_socket, address):
-    team_name = connection_socket.recv(1024)  # First message from client is their team name
-    team_name = team_name.decode()
+    team_name = connection_socket.recv(1024).decode()  # First message from client is their team name
     connection_socket.setblocking(False)
     if len(clients) < MAX_CLIENTS:
-        print(f"accepted client: {len(clients) + 1} - debug message")  # TODO - debug message
+        # print(f"accepted client: {len(clients) + 1} - debug message")  # TODO - debug message
         clients.append(Player(socket=connection_socket, address=address, name=team_name))
 
 
@@ -86,9 +85,8 @@ def start() -> None:
         broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         broadcast_socket.bind(BROADCAST_SERVER_ADDR)
         broadcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        # Start a new thread to listen to client connections
-        accept_thread = threading.Thread(target=listen_for_clients, args=[server_socket], daemon=True)
-        accept_thread.start()
+        # Start a new daemon thread to listen to client connections (will be terminated along with the main thread)
+        accept_thread = threading.Thread(target=listen_for_clients, args=[server_socket], daemon=True).start()
         # Meanwhile, send offer announcements
         while len(clients) < MAX_CLIENTS:
             send_broadcast(broadcast_socket)

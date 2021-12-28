@@ -67,16 +67,16 @@ def start_game(sock):
 def main():
     global c_socket
     print("Client started, listening for offer requests...")
-    print(f'Listening on address {HOST} : {UDP_PORT} - debug message')  # TODO - debug message
+    # print(f'Listening on address {HOST} : {UDP_PORT} - debug message')  # TODO - debug message
     while True:
         # listen to UDP offers
         offer_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         offer_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         offer_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         offer_socket.bind((BROADCAST_IP, UDP_PORT))
-        print("waiting for an offer - debug message")  # TODO - debug message
+        # print("waiting for an offer - debug message")  # TODO - debug message
         offer, server_address = offer_socket.recvfrom(1024)
-        print(f"incoming offer: {offer} - debug message")  # TODO - debug message
+        # print(f"incoming offer: {offer} - debug message")  # TODO - debug message
         offer_socket.close()
         # try to connect to server
         result = handle_offer(offer)
@@ -91,10 +91,10 @@ def main():
             # sends the server the client name
             c_socket.send(TEAM_NAME)
         except OSError:  # handling the exception for not connecting to server
-            print("connection failed, server refused to accept more clients - debug message")  # TODO - debug message
+            # print("connection failed, server refused to accept more clients - debug message")  # TODO - debug message
             c_socket.close()
             print("Server disconnected, listening for offer requests...")
-        c_socket.recv(1024)  # Wait until receiving welcome message and math problem
+        print(c_socket.recv(1024).decode())  # Wait until receiving welcome message and math problem and print it
         c_socket.setblocking(False)
         start_game(c_socket)
         print("Server disconnected, listening for offer requests...")
