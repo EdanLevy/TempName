@@ -43,7 +43,7 @@ def send_broadcast(udp_socket):
 def accept_client(connection_socket, address):
     team_name = connection_socket.recv(1024)  # First message from client is their team name
     team_name = team_name.decode()
-    connection_socket.setblocking(False)
+    # connection_socket.setblocking(False)
     if len(clients) < MAX_CLIENTS:
         print(f"accepted client: {len(clients) + 1} - debug message")  # TODO - debug message
         clients.append(Player(socket=connection_socket, address=address, name=team_name))
