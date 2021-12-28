@@ -4,17 +4,18 @@ import socket
 import sys
 from typing import Union
 
-MAGIC_COOKIE = b"0xabcddcba"  # All broadcast offer messages MUST begin with this prefix
-MESSAGE_TYPE = b"0x2"  # Specifies broadcast offer, no other message types are supported
-
-CLIENT_NAME = b"Timeout tERRORs\n"
-SERVER_IP = "172.1.0.90"  # Dedicated server IP address - student90
+BROADCAST_IP = "127.255.255.255"
+SERVER_IP = "127.0.1.1"  # Dedicated server IP address - student90
 UDP_PORT = 13117  # Dedicated broadcast offer port
 TCP_PORT = -1
 PORT = random.randint(1024, 65535)  # The port from which the client will send out messages
 HOST = socket.gethostbyname(socket.gethostname())
-FORMAT = "utf-8"  # Decode and encode format for incoming and outgoing messages
 c_socket = None
+
+MAGIC_COOKIE = b"0xabcddcba"  # All broadcast offer messages MUST begin with this prefix
+MESSAGE_TYPE = b"0x2"  # Specifies broadcast offer, no other message types are supported
+CLIENT_NAME = b"Timeout tERRORs\n"
+FORMAT = "utf-8"  # Decode and encode format for incoming and outgoing messages
 
 
 # checks if the offer is a valid offer
@@ -56,8 +57,9 @@ def main():
     while True:
         # listen to UDP offers
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.bind((SERVER_IP, UDP_PORT))
+        sock.bind(('', UDP_PORT))
         offer, address = sock.recvfrom(8)
+        sock.close()
         # try to  connect to server.
         result = handle_offer(offer)
         # if we got false then the client continues to another offer to look for
@@ -87,4 +89,8 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         print(sys.argv[1])
         configure_game(sys.argv[1])
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        if c_socket is not None:
+            c_socket.close()
