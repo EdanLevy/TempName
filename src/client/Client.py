@@ -15,6 +15,8 @@ MIN_VALID_PORT = 0
 PORT = random.randint(1024, 65535)  # The port from which the client will send out messages
 HOST = socket.gethostbyname(socket.gethostname())
 
+IP_INDEX = 0  # In an address tuple, the IP is the first element
+
 MAGIC_COOKIE = b'\xab\xcd\xdc\xba'  # All broadcast offer messages MUST begin with this prefix
 MAGIC_COOKIE_START = 0  # The index in the offer announcement where the magic cookie starts
 MAGIC_COOKIE_END = 4  # The index in the offer announcement where the magic cookie ends
@@ -81,12 +83,12 @@ def main():
         # if the offer is invalid then the client continues to look for other offers
         if not result:
             continue
-        print(f"Received offer from {server_address}, attempting to connect...")
+        print(f"Received offer from {server_address[IP_INDEX]}, attempting to connect...")
         # requesting a socket for tcp connection and setting it to false
         c_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:  # try to connect to server. will get excepted if server refused to establish connection
             c_socket.connect((SERVER_IP, TCP_PORT))
-            # sends the rever the client name
+            # sends the server the client name
             c_socket.send(TEAM_NAME)
         except OSError:  # handling the exception for not connecting to server
             print("connection failed, server refused to accept more clients - debug message")  # TODO - debug message

@@ -9,18 +9,22 @@ from Player import Player
 REBROADCAST_TIMEOUT = 1  # Broadcast announcement timeout after which another broadcast is sent (1 second)
 
 SERVER_IP = "127.0.0.1"  # socket.gethostbyname(socket.gethostname())  # Acquire local host IP address
-MAGIC_COOKIE = b'\xab\xcd\xdc\xba'
-MESSAGE_TYPE = b'\x02'  # Specifies broadcast offer, no other message types are supported
+
 BROADCAST_DST_PORT = 13117  # Fixed port number, as defined in the packet formats
 BROADCAST_SRC_PORT = random.randint(1024, 65535)  # The port from which to send out offer announcements
 
 # The port from which the server will listen for incoming client connections
 SERVER_PORT = random.choice([i for i in range(1024, 65535) if i not in [BROADCAST_SRC_PORT]])
+SERVER_PORT_LENGTH = 2  # Port is 2 bytes (16 bits) long
 
 SERVER_ADDR = (SERVER_IP, SERVER_PORT)
 BROADCAST_SERVER_ADDR = (SERVER_IP, BROADCAST_SRC_PORT)
 BROADCAST_IP = "127.0.0.255"
 BROADCAST_DST_ADDR = (BROADCAST_IP, BROADCAST_DST_PORT)
+
+MAGIC_COOKIE = b'\xab\xcd\xdc\xba'
+MESSAGE_TYPE = b'\x02'  # Specifies broadcast offer, no other message types are supported
+OFFER_END_INDEX = 8  # UDP broadcast offer messages are of fixed length 7
 
 MAX_CLIENTS = 2  # Amount of clients required to initiate a game session
 ANSWER_LENGTH = 2  # Expected length of answer messages
@@ -30,19 +34,19 @@ accept_thread = None
 
 
 def send_broadcast(udp_socket):
-    announcement_message = MAGIC_COOKIE + MESSAGE_TYPE + SERVER_PORT.to_bytes(2, "little")
-    print(f"broadcasting offer - {announcement_message} to: {BROADCAST_DST_ADDR}")
-    udp_socket.sendto(announcement_message[:8], BROADCAST_DST_ADDR)
+    announcement_message = MAGIC_COOKIE + MESSAGE_TYPE + SERVER_PORT.to_bytes(SERVER_PORT_LENGTH, "little")
+    print(f"broadcasting offer - {announcement_message} to: {BROADCAST_DST_ADDR} - debug message")  # TODO - debug message
+    udp_socket.sendto(announcement_message[:OFFER_END_INDEX], BROADCAST_DST_ADDR)
 
 
 # accept client to the session if available, and wait to start the session
 def accept_client(connection_socket, address):
-    client_name = connection_socket.recv(1024)  # First message from client is expected to be their name
-    client_name = client_name.decode().split('\n')[0]
+    team_name = connection_socket.recv(1024)  # First message from client is their team name
+    team_name = team_name.decode()
     connection_socket.setblocking(False)
     if len(clients) < MAX_CLIENTS:
-        print(f"accepted client: {len(clients) + 1}")
-        clients.append(Player(socket=connection_socket, address=address, name=client_name))
+        print(f"accepted client: {len(clients) + 1} - debug message")  # TODO - debug message
+        clients.append(Player(socket=connection_socket, address=address, name=team_name))
 
 
 # Initialize a TCP socket and begin listening for incoming connections
