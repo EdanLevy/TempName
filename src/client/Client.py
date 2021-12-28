@@ -4,16 +4,17 @@ import socket
 import sys
 from typing import Union
 
-BROADCAST_IP = "127.255.255.255"
-SERVER_IP = "127.0.1.1"  # Dedicated server IP address - student90
+TIMEOUT = 10
+
+BROADCAST_IP = "127.0.0.255"
+SERVER_IP = "localhost"  # Dedicated server IP address - student90
 UDP_PORT = 13117  # Dedicated broadcast offer port
 TCP_PORT = -1
 PORT = random.randint(1024, 65535)  # The port from which the client will send out messages
 HOST = socket.gethostbyname(socket.gethostname())
 c_socket = None
-
-MAGIC_COOKIE = b"0xabcddcba"  # All broadcast offer messages MUST begin with this prefix
-MESSAGE_TYPE = b"0x2"  # Specifies broadcast offer, no other message types are supported
+MAGIC_COOKIE = b'\xab\xcd\xdc\xba'  # All broadcast offer messages MUST begin with this prefix
+MESSAGE_TYPE = b'\x02'  # Specifies broadcast offer, no other message types are supported
 CLIENT_NAME = b"Timeout tERRORs\n"
 FORMAT = "utf-8"  # Decode and encode format for incoming and outgoing messages
 
@@ -21,14 +22,13 @@ FORMAT = "utf-8"  # Decode and encode format for incoming and outgoing messages
 # checks if the offer is a valid offer
 def handle_offer(offer: bytes):
     global TCP_PORT
-    magic_exist = offer.startswith(MAGIC_COOKIE, 0, 4)
-    if not magic_exist:
+    if not offer[0:4].__eq__(MAGIC_COOKIE):
         print("invalid offer, no magic cookie")
         return False
-    if offer[4] is not MESSAGE_TYPE:
+    if not offer[4].__eq__(MESSAGE_TYPE):
         print("invalid offer, no message type")
         return False
-    TCP_PORT = int(offer[5:])
+    TCP_PORT = int.from_bytes(offer[5:7], "little")
     if TCP_PORT < 0:
         print("invalid offer, not a good port")
         return False
@@ -39,7 +39,7 @@ def handle_offer(offer: bytes):
 def start_game(sock):
     terminate_game = False
     while not terminate_game:
-        reads, _, _ = select.select([sock, sys.stdin], [], [], 10)
+        reads, _, _ = select.select([sock, sys.stdin], [], [], TIMEOUT)
 
         if sock in reads:  # received an answer from server i.e. the game is over, print message, close socket
             message = sock.recv(1024)
@@ -57,8 +57,11 @@ def main():
     while True:
         # listen to UDP offers
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.bind(('', UDP_PORT))
-        offer, address = sock.recvfrom(8)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        sock.bind((BROADCAST_IP, UDP_PORT))
+        print("waiting for an offer")
+        offer, address = sock.recvfrom(1024)
+        print(f"incoming offer: {offer}")
         sock.close()
         # try to  connect to server.
         result = handle_offer(offer)
@@ -72,7 +75,7 @@ def main():
             c_socket.connect((SERVER_IP, TCP_PORT))
             # sends the rever the client name
             c_socket.send(CLIENT_NAME)
-        except Union[TimeoutError, InterruptedError]:  # handling the exception for not connecting to server
+        except OSError:  # handling the exception for not connecting to server
             print("connection failed, server refused to accept more clients")
             c_socket.close()
 
