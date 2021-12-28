@@ -10,7 +10,7 @@ from client.Client import MAGIC_COOKIE
 
 REBROADCAST_TIMEOUT = 1  # Broadcast announcement timeout after which another broadcast is sent (1 second)
 
-SERVER_IP = "10.100.102.12"  # socket.gethostbyname(socket.gethostname())  # Acquire local host IP address
+SERVER_IP = "127.0.0.1"  # socket.gethostbyname(socket.gethostname())  # Acquire local host IP address
 MAGIC_COOKIE = b'\xab\xcd\xdc\xba'
 MESSAGE_TYPE = b'\x02'  # Specifies broadcast offer, no other message types are supported
 BROADCAST_DST_PORT = 13117  # Fixed port number, as defined in the packet formats
@@ -22,7 +22,7 @@ SERVER_PORT = random.choice([i for i in range(1024, 65535) if i not in [BROADCAS
 SERVER_ADDR = (SERVER_IP, SERVER_PORT)
 BROADCAST_SERVER_ADDR = (SERVER_IP, BROADCAST_SRC_PORT)
 BROADCAST_IP = "127.0.0.255"
-BROARDCAST_DST_ADDR = (BROADCAST_IP, BROADCAST_DST_PORT)
+BROADCAST_DST_ADDR = (BROADCAST_IP, BROADCAST_DST_PORT)
 
 FORMAT = 'utf-8'  # Decode and encode format for incoming and outgoing messages
 MAX_CLIENTS = 2  # Amount of clients required to initiate a game session
@@ -35,8 +35,8 @@ accept_thread = None
 def send_broadcast(udp_socket):
     announcement_message = MAGIC_COOKIE + MESSAGE_TYPE + SERVER_PORT.to_bytes(2, "little")
     print(len(announcement_message))
-    print(f"broadcasting offer - {announcement_message} to: {BROARDCAST_DST_ADDR}")
-    udp_socket.sendto(announcement_message[:8], BROARDCAST_DST_ADDR)
+    print(f"broadcasting offer - {announcement_message} to: {BROADCAST_DST_ADDR}")
+    udp_socket.sendto(announcement_message[:8], BROADCAST_DST_ADDR)
 
 
 # accept client to the session if available, and wait to start the session

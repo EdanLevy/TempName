@@ -70,7 +70,6 @@ def main():
             continue
         # requesting a socket for tcp connection and setting it to false
         c_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        c_socket.setblocking(False)
         try:  # try to connect to server. will get excepted if server refused to establish connection
             c_socket.connect((SERVER_IP, TCP_PORT))
             # sends the rever the client name
@@ -78,7 +77,8 @@ def main():
         except OSError:  # handling the exception for not connecting to server
             print("connection failed, server refused to accept more clients")
             c_socket.close()
-
+        c_socket.recv(1024)  # Wait until receiving welcome
+        c_socket.setblocking(False)
         start_game(c_socket)
 
 
