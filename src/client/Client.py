@@ -7,13 +7,13 @@ from typing import Union
 MAGIC_COOKIE = b"0xabcddcba"  # All broadcast offer messages MUST begin with this prefix
 MESSAGE_TYPE = b"0x2"  # Specifies broadcast offer, no other message types are supported
 
-CLIENT_NAME = b"Timeout tErrorS\n"
-SERVER_IP = "172.1.0.90"
-UDP_PORT = 13117
+CLIENT_NAME = b"Timeout tERRORs\n"
+SERVER_IP = "172.1.0.90"  # Dedicated server IP address - student90
+UDP_PORT = 13117  # Dedicated broadcast offer port
 TCP_PORT = -1
-PORT = random.randint(1024, 65535)
+PORT = random.randint(1024, 65535)  # The port from which the client will send out messages
 HOST = socket.gethostbyname(socket.gethostname())
-FORMAT = "UTF-8"
+FORMAT = "utf-8"  # Decode and encode format for incoming and outgoing messages
 c_socket = None
 
 
