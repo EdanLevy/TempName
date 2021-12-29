@@ -7,12 +7,14 @@ import sys
 TIMEOUT = 10
 
 BROADCAST_IP = "127.0.0.255"
-BROADCAST_IP_DEV_NETWORK = "172.1.255.255"  # Dev network
+BROADCAST_IP_ETH1_NETWORK = "172.1.255.255"
+BROADCAST_IP_DEV_NETWORK = "172.18.255.255"  # Dev network
 BROADCAST_IP_TEST_NETWORK = "172.99.255.255"  # Test network - only to be used when being graded
 UDP_PORT = 13117  # Dedicated broadcast offer port
 BROADCAST_ADDR = (BROADCAST_IP, UDP_PORT)
 SERVER_IP = "127.0.0.1"  # Acquire local host IP address
-SERVER_IP_DEV_NETWORK = "172.1.0.90"  # Dev network
+SERVER_IP_ETH1_NETWORK = "172.1.0.90"
+SERVER_IP_DEV_NETWORK = "172.18.0.90"  # Dev network
 SERVER_IP_TEST_NETWORK = "172.99.0.90"  # Test network - only to be used when being graded
 TCP_PORT = -1  # Server port, undefined at first
 MIN_VALID_PORT = 0
@@ -126,15 +128,15 @@ def main():
 def configure_game(server_addr=BROADCAST_IP):
     global BROADCAST_ADDR
     global SERVER_IP
-    if server_addr == "dev":
+    if server_addr == "eth1":
+        BROADCAST_ADDR = (BROADCAST_IP_ETH1_NETWORK, UDP_PORT)
+        SERVER_IP = SERVER_IP_ETH1_NETWORK
+    if server_addr == "eth2":
         BROADCAST_ADDR = (BROADCAST_IP_DEV_NETWORK, UDP_PORT)
         SERVER_IP = SERVER_IP_DEV_NETWORK
     elif server_addr == "test":
         BROADCAST_ADDR = (BROADCAST_IP_TEST_NETWORK, UDP_PORT)
         SERVER_IP = SERVER_IP_TEST_NETWORK
-    else:
-        BROADCAST_ADDR = (BROADCAST_IP, UDP_PORT)
-        SERVER_IP = SERVER_IP_DEV_NETWORK
 
 
 if __name__ == "__main__":

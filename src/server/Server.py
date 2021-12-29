@@ -11,7 +11,8 @@ from Player import Player
 REBROADCAST_TIMEOUT = 1  # Broadcast announcement timeout after which another broadcast is sent (1 second)
 
 SERVER_IP = "127.0.0.1"  # Acquire local host IP address
-SERVER_IP_DEV_NETWORK = "172.1.0.90"  # Dev network
+SERVER_IP_ETH1_NETWORK = "172.1.0.90"
+SERVER_IP_DEV_NETWORK = "172.18.0.90"  # Dev network
 SERVER_IP_TEST_NETWORK = "172.99.0.90"  # Test network - only to be used when being graded
 
 BROADCAST_DST_PORT = 13117  # Fixed port number, as defined in the packet formats
@@ -24,7 +25,8 @@ SERVER_PORT_LENGTH = 2  # Port is 2 bytes (16 bits) long
 SERVER_ADDR = (SERVER_IP, SERVER_PORT)
 BROADCAST_SERVER_ADDR = (SERVER_IP, BROADCAST_SRC_PORT)
 BROADCAST_IP = "127.0.0.255"
-BROADCAST_IP_DEV_NETWORK = '172.1.255.255'  # Dev network
+BROADCAST_IP_ETH1_NETWORK = "172.1.255.255"
+BROADCAST_IP_DEV_NETWORK = '172.18.255.255'  # Dev network
 BROADCAST_IP_TEST_NETWORK = "172.99.255.255"  # Test network - only to be used when being graded
 BROADCAST_DST_ADDR = (BROADCAST_IP, BROADCAST_DST_PORT)
 
@@ -116,15 +118,15 @@ def start() -> None:
 def configure_game(server_addr=BROADCAST_IP):
     global BROADCAST_DST_ADDR
     global SERVER_IP
-    if server_addr == "dev":
+    if server_addr == "eth1":
+        BROADCAST_DST_ADDR = (BROADCAST_IP_ETH1_NETWORK, BROADCAST_DST_PORT)
+        SERVER_IP = SERVER_IP_ETH1_NETWORK
+    if server_addr == "eth2":
         BROADCAST_DST_ADDR = (BROADCAST_IP_DEV_NETWORK, BROADCAST_DST_PORT)
         SERVER_IP = SERVER_IP_DEV_NETWORK
     elif server_addr == "test":
         BROADCAST_DST_ADDR = (BROADCAST_IP_TEST_NETWORK, BROADCAST_DST_PORT)
         SERVER_IP = SERVER_IP_TEST_NETWORK
-    else:
-        BROADCAST_DST_ADDR = (BROADCAST_IP, BROADCAST_DST_PORT)
-        SERVER_IP = SERVER_IP_DEV_NETWORK
 
 
 if __name__ == "__main__":
