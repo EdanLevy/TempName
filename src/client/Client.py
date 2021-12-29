@@ -55,7 +55,7 @@ def handle_offer(offer: bytes):
         if TCP_PORT < MIN_VALID_PORT or TCP_PORT > MAX_VALID_PORT:
             print("Invalid port. Rejecting offer.")
             return False
-    except struct.error or OverflowError as e:
+    except struct.error or OverflowError or OSError as e:
         print(f"cannot unpack message {e}")
     return True
 
@@ -94,7 +94,6 @@ def main():
             offer_socket.close()
             # try to connect to server
             print(f"Received offer from {SERVER_IP}, attempting to connect...")
-            print(offer)
             result = handle_offer(offer)
             # if the offer is invalid then the client continues to look for other offers
             if not result:
