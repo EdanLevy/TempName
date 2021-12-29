@@ -45,18 +45,18 @@ def handle_offer(offer: bytes):
         message = struct.unpack('IbH', offer)
         print(offer)
         print(message)
+        if not message[0] == MAGIC_COOKIE:
+            print("Offer doesn't start with magic cookie. Rejecting offer.")
+            return False
+        if not message[1] == MESSAGE_TYPE:
+            print("Message type not support. Rejecting offer.")
+            return False
+        TCP_PORT = int(message[2])
+        if TCP_PORT < MIN_VALID_PORT:
+            print("Invalid port. Rejecting offer.")
+            return False
     except struct.error as e:
-        print("cannot unpack message" + e)
-    if not message[0] == MAGIC_COOKIE:
-        print("Offer doesn't start with magic cookie. Rejecting offer.")
-        return False
-    if not message[1] == MESSAGE_TYPE:
-        print("Message type not support. Rejecting offer.")
-        return False
-    TCP_PORT = int(message[2])
-    if TCP_PORT < MIN_VALID_PORT:
-        print("Invalid port. Rejecting offer.")
-        return False
+        print(f"cannot unpack message {e}")
     return True
 
 
@@ -108,7 +108,7 @@ def main():
             c_socket.connect((SERVER_IP, TCP_PORT))
             # sends the server the client name
             c_socket.send(TEAM_NAME)
-        except OSError:  # handling the exception for not connecting to server
+        except socket.error:  # handling the exception for not connecting to server
             c_socket.close()
             print("Server disconnected, listening for offer requests...")
         try:
