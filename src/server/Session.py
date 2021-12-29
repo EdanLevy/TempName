@@ -98,9 +98,9 @@ class Session:
         for sock in read_ready:
             answer = ""  # default non-numeric value to allow entrance to the while loop
             player = self.p1 if sock is self.p1.socket else self.p2
-            while not len(answer) == 0 and not answer[0].isdigit():
+            while len(answer) == 0 or not answer[0].isdigit():
                 answer = self.receive_handler(sock)
-            self.results.get(player).append(answer)
+            self.results.get(player).append(int(answer[0]))
             break  # Once 1 player has sent an answer, the game is decided
         self.check_send_result(player)
 
