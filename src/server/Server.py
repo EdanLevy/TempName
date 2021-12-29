@@ -9,7 +9,7 @@ from Player import Player
 REBROADCAST_TIMEOUT = 1  # Broadcast announcement timeout after which another broadcast is sent (1 second)
 
 SERVER_IP = socket.gethostbyname(socket.gethostname())  # Acquire local host IP address
-SERVER_IP_DEV_NETWORK = "172.1.0.90"  # Dev network
+SERVER_IP_DEV_NETWORK = "172.18.0.90"  # Dev network
 SERVER_IP_TEST_NETWORK = "172.99.0.90"  # Test network - only to be used when being graded
 
 BROADCAST_DST_PORT = 13117  # Fixed port number, as defined in the packet formats
@@ -22,8 +22,8 @@ SERVER_PORT_LENGTH = 2  # Port is 2 bytes (16 bits) long
 SERVER_ADDR = (SERVER_IP, SERVER_PORT)
 BROADCAST_SERVER_ADDR = (SERVER_IP, BROADCAST_SRC_PORT)
 BROADCAST_IP = "127.0.0.255"
-BROADCAST_IP_DEV_NETWORK = "172.1.0.255"  # Dev network
-BROADCAST_IP_TEST_NETWORK = "172.99.0.255"  # Test network - only to be used when being graded
+BROADCAST_IP_DEV_NETWORK = "172.18.255.255"  # Dev network
+BROADCAST_IP_TEST_NETWORK = "172.99.255.255"  # Test network - only to be used when being graded
 BROADCAST_DST_ADDR = (BROADCAST_IP, BROADCAST_DST_PORT)
 
 MAGIC_COOKIE = b'\xab\xcd\xdc\xba'
@@ -39,7 +39,6 @@ accept_thread = None
 
 def send_broadcast(udp_socket):
     announcement_message = MAGIC_COOKIE + MESSAGE_TYPE + SERVER_PORT.to_bytes(SERVER_PORT_LENGTH, "little")
-    # print(f"broadcasting offer - {announcement_message} to: {BROADCAST_DST_ADDR} - debug message")  # TODO - debug message
     udp_socket.sendto(announcement_message[:OFFER_END_INDEX], BROADCAST_DST_ADDR)
 
 
@@ -79,7 +78,7 @@ def send_to_client(client: Player, message: str) -> None:
 def receive_from_client(conn):
     # If function is interrupted due to socket closing prematurely return an empty message
     try:
-        message = conn.recv(ANSWER_LENGTH).decode()  # TODO - switch to 'getch'?
+        message = conn.recv(ANSWER_LENGTH).decode("UTF-8")
     except socket.error:
         message = ""
     return message
