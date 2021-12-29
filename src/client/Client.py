@@ -41,14 +41,17 @@ c_socket = None
 # checks if the offer is a valid offer
 def handle_offer(offer: bytes):
     global TCP_PORT
-    (mc, mt, pn) = struct.unpack('IBH', offer)
-    if not mc == MAGIC_COOKIE:
+    try:
+        message = struct.unpack('IbH', offer)
+    except struct.error:
+        print("cannot unpack message")
+    if not message[0] == MAGIC_COOKIE:
         print("Offer doesn't start with magic cookie. Rejecting offer.")
         return False
-    if not mt == MESSAGE_TYPE:
+    if not message[1] == MESSAGE_TYPE:
         print("Message type not support. Rejecting offer.")
         return False
-    TCP_PORT = pn
+    TCP_PORT = int(message[2])
     if TCP_PORT < MIN_VALID_PORT:
         if TCP_PORT != 2085:
             print("Invalid port. Rejecting offer.")
