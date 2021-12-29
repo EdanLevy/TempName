@@ -119,15 +119,19 @@ def start() -> None:
 def configure_game(server_addr=BROADCAST_IP):
     global BROADCAST_DST_ADDR
     global SERVER_IP
+    global SERVER_ADDR
     if server_addr == "eth1":
         BROADCAST_DST_ADDR = (BROADCAST_IP_ETH1_NETWORK, BROADCAST_DST_PORT)
         SERVER_IP = get_if_addr("eth1")
+        SERVER_ADDR = (get_if_addr("eth1"), SERVER_PORT)
     if server_addr == "eth0":
         BROADCAST_DST_ADDR = (BROADCAST_IP_DEV_NETWORK, BROADCAST_DST_PORT)
         SERVER_IP = SERVER_IP_DEV_NETWORK
+        SERVER_ADDR = (SERVER_IP_DEV_NETWORK, SERVER_PORT)
     elif server_addr == "test":
         BROADCAST_DST_ADDR = (BROADCAST_IP_TEST_NETWORK, BROADCAST_DST_PORT)
         SERVER_IP = SERVER_IP_TEST_NETWORK
+        SERVER_ADDR = (SERVER_IP_TEST_NETWORK, SERVER_PORT)
 
 
 if __name__ == "__main__":
