@@ -97,7 +97,7 @@ def start() -> None:
         # Create a socket instance whose address-family is AF_INET (IPv4)
         # and socket kind is SOCK_DGRAM (connectionless UDP)
         broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        broadcast_socket.bind(BROADCAST_SERVER_ADDR)
+        broadcast_socket.bind(('127.0.0.255', 2090))
         broadcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         # Start a new daemon thread to listen to client connections (will be terminated along with the main thread)
         accept_thread = threading.Thread(target=listen_for_clients, args=[server_socket], daemon=True).start()
@@ -122,7 +122,7 @@ def configure_game(server_addr=BROADCAST_IP):
     global SERVER_ADDR
     if server_addr == "eth1":
         BROADCAST_DST_ADDR = (BROADCAST_IP_ETH1_NETWORK, BROADCAST_DST_PORT)
-        SERVER_IP = get_if_addr("eth1")
+        SERVER_IP = SERVER_IP_ETH1_NETWORK
         SERVER_ADDR = (get_if_addr("eth1"), SERVER_PORT)
     if server_addr == "eth0":
         BROADCAST_DST_ADDR = (BROADCAST_IP_DEV_NETWORK, BROADCAST_DST_PORT)
