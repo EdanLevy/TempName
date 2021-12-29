@@ -1,3 +1,4 @@
+import random
 import socket
 import struct
 import sys
@@ -16,11 +17,11 @@ SERVER_IP_ETH1_NETWORK = "172.1.0.90"
 SERVER_IP_DEV_NETWORK = "172.18.0.90"  # Dev network
 SERVER_IP_TEST_NETWORK = "172.99.0.90"  # Test network - only to be used when being graded
 
-BROADCAST_DST_PORT = 13118  # Fixed port number, as defined in the packet formats
-BROADCAST_SRC_PORT = 12116  # The port from which to send out offer announcements
+BROADCAST_DST_PORT = 13117  # Fixed port number, as defined in the packet formats
+BROADCAST_SRC_PORT = random.randint(1024, 65535)  # The port from which to send out offer announcements
 
 # The port from which the server will listen for incoming client connections
-SERVER_PORT = 12115
+SERVER_PORT = random.choice([i for i in range(1024, 65535) if i not in [BROADCAST_SRC_PORT]])
 SERVER_PORT_LENGTH = 2  # Port is 2 bytes (16 bits) long
 
 SERVER_ADDR = (SERVER_IP, SERVER_PORT)
@@ -44,7 +45,7 @@ accept_thread = None
 
 def send_broadcast(udp_socket):
     announcement_message = struct.pack('IBH', MAGIC_COOKIE, MESSAGE_TYPE, SERVER_PORT)
-    udp_socket.sendto(announcement_message, ('<broadcast>', 13117))
+    udp_socket.sendto(announcement_message[:OFFER_END_INDEX], BROADCAST_DST_ADDR)
 
 
 # accept client to the session if available, and wait to start the session

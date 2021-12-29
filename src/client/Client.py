@@ -12,7 +12,7 @@ BROADCAST_IP = "127.0.0.255"
 BROADCAST_IP_ETH1_NETWORK = "172.1.255.255"
 BROADCAST_IP_DEV_NETWORK = "172.18.255.255"  # Dev network
 BROADCAST_IP_TEST_NETWORK = "172.99.255.255"  # Test network - only to be used when being graded
-UDP_PORT = 13118  # Dedicated broadcast offer port
+UDP_PORT = 13117  # Dedicated broadcast offer port
 BROADCAST_ADDR = (BROADCAST_IP, UDP_PORT)
 SERVER_IP = "127.0.0.1"  # Acquire local host IP address
 SERVER_IP_ETH1_NETWORK = "172.1.0.90"
@@ -55,7 +55,6 @@ def handle_offer(offer: bytes):
             print("Message type not support. Rejecting offer.")
             return False
         TCP_PORT = int(message[2])
-        print(TCP_PORT)
         if TCP_PORT < MIN_VALID_PORT or TCP_PORT > MAX_VALID_PORT:
             print("Invalid port. Rejecting offer.")
             return False
@@ -92,7 +91,6 @@ def main():
         offer_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         offer_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         offer_socket.bind(BROADCAST_ADDR)
-
         try:
             offer, server_address = offer_socket.recvfrom(8)
             SERVER_IP = server_address[IP_INDEX]
@@ -113,7 +111,7 @@ def main():
             c_socket.connect((SERVER_IP, TCP_PORT))
             # sends the server the client name
             c_socket.send(TEAM_NAME)
-        except socket.error:  # handling the exception for not connecting to server
+        except socket.error or OSError:  # handling the exception for not connecting to server
             c_socket.close()
             print("Server disconnected, listening for offer requests...")
             continue
