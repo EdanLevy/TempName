@@ -5,8 +5,6 @@ import sys
 import threading
 import time
 
-from scapy.arch import get_if_addr
-
 from Session import Session
 from Player import Player
 
@@ -137,7 +135,6 @@ def configure_game(server_addr=BROADCAST_IP):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        print(sys.argv[1])
         configure_game(sys.argv[1])
     try:
         start()

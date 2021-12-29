@@ -47,7 +47,6 @@ def handle_offer(offer: bytes):
     global TCP_PORT
     try:
         message = struct.unpack('IBH', offer)
-        print(f"cookie: {message[0]}")
         if not message[0] == MAGIC_COOKIE:
             print(f"Offer doesn't start with magic cookie. Rejecting offer.")
             return False
@@ -59,7 +58,7 @@ def handle_offer(offer: bytes):
             print("Invalid port. Rejecting offer.")
             return False
     except struct.error or OverflowError or OSError as e:
-        print(f"cannot unpack message")
+        print(f"Cannot unpack message")
         return False
     return True
 
@@ -102,7 +101,7 @@ def main():
             if not result:
                 continue
         except socket.error:
-            print("cannot receive offer")
+            print("Cannot receive offer")
             continue
 
         # requesting a socket for tcp connection and setting it to false
@@ -146,6 +145,6 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("client stopped")
+        print("Client stopped")
         if c_socket is not None:
             c_socket.close()
