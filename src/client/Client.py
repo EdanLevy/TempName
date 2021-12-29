@@ -45,7 +45,7 @@ def handle_offer(offer: bytes):
         message = struct.unpack('IBH', offer)
         print(f"cookie: {message[0]}")
         if not message[0] == MAGIC_COOKIE:
-            print(f"Offer doesn't start with magic cookie. Rejecting offer. {message[0]}")
+            print(f"Offer doesn't start with magic cookie. Rejecting offer.")
             return False
         if not message[1] == MESSAGE_TYPE:
             print("Message type not support. Rejecting offer.")
