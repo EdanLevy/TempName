@@ -44,7 +44,7 @@ accept_thread = None
 
 def send_broadcast(udp_socket):
     announcement_message = struct.pack('IBH', MAGIC_COOKIE, MESSAGE_TYPE, SERVER_PORT)
-    udp_socket.sendto(announcement_message, ('', 13117))
+    udp_socket.sendto(announcement_message, ('<broadcast>', 13117))
 
 
 # accept client to the session if available, and wait to start the session
@@ -71,7 +71,6 @@ def open_tcp_server():
 
 def listen_for_clients(server_socket):
     while len(clients) < MAX_CLIENTS:
-        print ("2")
         conn, address = server_socket.accept()
         accept_client(conn, address)
 
@@ -104,7 +103,6 @@ def start() -> None:
         accept_thread = threading.Thread(target=listen_for_clients, args=[server_socket], daemon=True).start()
         # Meanwhile, send offer announcements
         while len(clients) < MAX_CLIENTS:
-            print ("1")
             send_broadcast(broadcast_socket)
             time.sleep(REBROADCAST_TIMEOUT)
         broadcast_socket.close()
