@@ -21,6 +21,7 @@ class Session:
         self.the_answer = None
         self.the_winner = None
         self.correct_answer = False
+        self.start = 0
         self.delta = float('inf')
         self.statistics = [None, float('inf')]
 
@@ -113,6 +114,7 @@ class Session:
             while len(answer) == 0 or not answer[0].isdigit():
                 answer = self.receive_handler(sock)
             self.results.get(player).append(int(answer[0]))
+            self.delta = datetime.datetime.now().timestamp() - self.start
             break  # Once 1 player has sent an answer, the game is decided
         self.check_send_result(player)
 
@@ -141,7 +143,6 @@ class Session:
         self.set_up_math_question()
         time.sleep(self.GAME_BEGINS_DELAY)
         self.send_game_messages()
-        start = datetime.datetime.now().timestamp()
+        self.start = datetime.datetime.now().timestamp()
         self.receive_answers()
-        self.delta = datetime.datetime.now().timestamp() - start
         self.send_result()
