@@ -28,6 +28,9 @@ class Session:
         self.p1 = players[0]
         self.p2 = players[1]
         self.results = {self.p1: [], self.p2: []}  # Clear dictionary for new session
+        self.the_winner = None
+        self.correct_answer = False
+        self.delta = float('inf')
 
     def set_up_math_question(self):
         math_questions = {}
@@ -114,9 +117,7 @@ class Session:
         self.check_send_result(player)
 
     def check_send_result(self, p: Player):
-        if p is None:
-            self.the_winner = None
-        else:
+        if p is not None:
             actual = int(self.results.get(p)[0])
             if actual == self.the_answer:
                 self.the_winner = p.name
