@@ -120,7 +120,7 @@ def configure_game(server_addr=BROADCAST_IP):
     if server_addr == "eth1":
         BROADCAST_DST_ADDR = (BROADCAST_IP_ETH1_NETWORK, BROADCAST_DST_PORT)
         SERVER_IP = SERVER_IP_ETH1_NETWORK
-        SERVER_ADDR = (get_if_addr("eth1"), SERVER_PORT)
+        SERVER_ADDR = (SERVER_IP_ETH1_NETWORK, SERVER_PORT)
     if server_addr == "eth0":
         BROADCAST_DST_ADDR = (BROADCAST_IP_DEV_NETWORK, BROADCAST_DST_PORT)
         SERVER_IP = SERVER_IP_DEV_NETWORK
