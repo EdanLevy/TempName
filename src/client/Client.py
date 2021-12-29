@@ -7,7 +7,7 @@ import sys
 TIMEOUT = 10
 
 BROADCAST_IP = "127.0.0.255"
-BROADCAST_IP_DEV_NETWORK = "255.255.255.255"  # Dev network
+BROADCAST_IP_DEV_NETWORK = "172.1.255.255"  # Dev network
 BROADCAST_IP_TEST_NETWORK = "172.99.255.255"  # Test network - only to be used when being graded
 UDP_PORT = 13117  # Dedicated broadcast offer port
 BROADCAST_ADDR = (BROADCAST_IP, UDP_PORT)
