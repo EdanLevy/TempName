@@ -121,7 +121,7 @@ class Session:
             if actual == self.the_answer:
                 self.the_winner = p.name
                 self.correct_answer = True
-                if self.delta.real < self.statistics[1]:
+                if self.delta < self.statistics[1]:
                     self.statistics[0] = p.name
                     self.statistics[1] = self.delta
             else:
@@ -140,7 +140,7 @@ class Session:
         self.set_up_math_question()
         time.sleep(self.GAME_BEGINS_DELAY)
         self.send_game_messages()
-        start = datetime.datetime.now()
+        start = datetime.datetime.now().timestamp()
         self.receive_answers()
-        self.delta = datetime.datetime.now() - start
+        self.delta = datetime.datetime.now().timestamp() - start
         self.send_result()
