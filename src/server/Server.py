@@ -40,7 +40,6 @@ accept_thread = None
 
 
 def send_broadcast(udp_socket):
-    print(sys.byteorder)
     announcement_message = struct.pack('IbH', MAGIC_COOKIE, MESSAGE_TYPE, SERVER_PORT)
     udp_socket.sendto(announcement_message[:OFFER_END_INDEX], BROADCAST_DST_ADDR)
 
