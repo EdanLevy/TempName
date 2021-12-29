@@ -16,7 +16,7 @@ SERVER_IP_ETH1_NETWORK = "172.1.0.90"
 SERVER_IP_DEV_NETWORK = "172.18.0.90"  # Dev network
 SERVER_IP_TEST_NETWORK = "172.99.0.90"  # Test network - only to be used when being graded
 
-BROADCAST_DST_PORT = 13117  # Fixed port number, as defined in the packet formats
+BROADCAST_DST_PORT = 13118  # Fixed port number, as defined in the packet formats
 BROADCAST_SRC_PORT = 0  # The port from which to send out offer announcements
 
 # The port from which the server will listen for incoming client connections
