@@ -17,6 +17,7 @@ SERVER_IP_DEV_NETWORK = "172.18.0.90"  # Dev network
 SERVER_IP_TEST_NETWORK = "172.99.0.90"  # Test network - only to be used when being graded
 TCP_PORT = -1  # Server port, undefined at first
 MIN_VALID_PORT = 0
+MAX_VALID_PORT = 65535
 
 PORT = random.randint(1024, 65535)  # The port from which the client will send out messages
 HOST_IP = socket.gethostbyname(socket.gethostname())  # Acquire local host IP address
@@ -52,7 +53,7 @@ def handle_offer(offer: bytes):
             print("Message type not support. Rejecting offer.")
             return False
         TCP_PORT = int(message[2])
-        if TCP_PORT < MIN_VALID_PORT:
+        if TCP_PORT < MIN_VALID_PORT or TCP_PORT > MAX_VALID_PORT:
             print("Invalid port. Rejecting offer.")
             return False
     except struct.error or OverflowError as e:
