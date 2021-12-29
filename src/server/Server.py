@@ -1,5 +1,6 @@
 import random
 import socket
+import sys
 import threading
 import time
 
@@ -109,8 +110,21 @@ def start() -> None:
             client.socket.close()
         clients.clear()
 
+# configure to a different server address to try to connect to other servers
+def configure_game(server_addr=BROADCAST_IP):
+    global BROADCAST_DST_ADDR
+    if server_addr is "dev":
+        BROADCAST_DST_ADDR = (BROADCAST_IP_DEV_NETWORK, BROADCAST_DST_PORT)
+    elif server_addr is "test":
+        BROADCAST_DST_ADDR = (BROADCAST_IP_TEST_NETWORK, BROADCAST_DST_PORT)
+    else:
+        BROADCAST_DST_ADDR = (BROADCAST_IP, BROADCAST_DST_PORT)
+
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        print(sys.argv[1])
+        configure_game(sys.argv[1])
     try:
         start()
     except KeyboardInterrupt:

@@ -4,13 +4,14 @@ import socket
 import sys
 import getch
 
+
 TIMEOUT = 10
 
 BROADCAST_IP = "127.0.0.255"
 BROADCAST_IP_DEV_NETWORK = "172.18.255.255"  # Dev network
 BROADCAST_IP_TEST_NETWORK = "172.99.255.255"  # Test network - only to be used when being graded
 UDP_PORT = 13117  # Dedicated broadcast offer port
-
+BROADCAST_ADDR = (BROADCAST_IP, UDP_PORT)
 SERVER_IP = socket.gethostbyname(socket.gethostname())  # Default personal server IP address - studentXX
 TCP_PORT = -1  # Server port, undefined at first
 MIN_VALID_PORT = 0
@@ -77,7 +78,7 @@ def main():
         offer_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         offer_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         offer_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        offer_socket.bind((BROADCAST_IP, UDP_PORT))
+        offer_socket.bind(BROADCAST_ADDR)
         offer, server_address = offer_socket.recvfrom(1024)
         SERVER_IP = server_address[IP_INDEX]
         offer_socket.close()
@@ -107,9 +108,14 @@ def main():
 
 
 # configure to a different server address to try to connect to other servers
-def configure_game(server_addr=SERVER_IP):
-    global SERVER_IP
-    SERVER_IP = server_addr
+def configure_game(server_addr=BROADCAST_IP):
+    global BROADCAST_ADDR
+    if server_addr is "dev":
+        BROADCAST_ADDR = (BROADCAST_IP_DEV_NETWORK, UDP_PORT)
+    elif server_addr is "test":
+        BROADCAST_ADDR = (BROADCAST_IP_TEST_NETWORK, UDP_PORT)
+    else:
+        BROADCAST_ADDR = (BROADCAST_IP, UDP_PORT)
 
 
 if __name__ == "__main__":
