@@ -11,7 +11,9 @@ BROADCAST_IP_DEV_NETWORK = "172.18.255.255"  # Dev network
 BROADCAST_IP_TEST_NETWORK = "172.99.255.255"  # Test network - only to be used when being graded
 UDP_PORT = 13117  # Dedicated broadcast offer port
 BROADCAST_ADDR = (BROADCAST_IP, UDP_PORT)
-SERVER_IP = "172.18.0.90"  # Default personal server IP address - studentXX
+SERVER_IP = "127.0.0.1"  # Acquire local host IP address
+SERVER_IP_DEV_NETWORK = "172.18.0.90"  # Dev network
+SERVER_IP_TEST_NETWORK = "172.99.0.90"  # Test network - only to be used when being graded
 TCP_PORT = -1  # Server port, undefined at first
 MIN_VALID_PORT = 0
 
@@ -109,12 +111,16 @@ def main():
 # configure to a different server address to try to connect to other servers
 def configure_game(server_addr=BROADCAST_IP):
     global BROADCAST_ADDR
+    global SERVER_IP
     if server_addr == "dev":
         BROADCAST_ADDR = (BROADCAST_IP_DEV_NETWORK, UDP_PORT)
+        SERVER_IP = SERVER_IP_DEV_NETWORK
     elif server_addr == "test":
         BROADCAST_ADDR = (BROADCAST_IP_TEST_NETWORK, UDP_PORT)
+        SERVER_IP = SERVER_IP_TEST_NETWORK
     else:
         BROADCAST_ADDR = (BROADCAST_IP, UDP_PORT)
+        SERVER_IP = SERVER_IP_DEV_NETWORK
 
 
 if __name__ == "__main__":

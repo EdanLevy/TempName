@@ -9,7 +9,7 @@ from Player import Player
 
 REBROADCAST_TIMEOUT = 1  # Broadcast announcement timeout after which another broadcast is sent (1 second)
 
-SERVER_IP = "172.18.0.90"  # Acquire local host IP address
+SERVER_IP = "127.0.0.1"  # Acquire local host IP address
 SERVER_IP_DEV_NETWORK = "172.18.0.90"  # Dev network
 SERVER_IP_TEST_NETWORK = "172.99.0.90"  # Test network - only to be used when being graded
 
@@ -114,12 +114,16 @@ def start() -> None:
 # configure to a different server address to try to connect to other servers
 def configure_game(server_addr=BROADCAST_IP):
     global BROADCAST_DST_ADDR
+    global SERVER_IP
     if server_addr == "dev":
         BROADCAST_DST_ADDR = (BROADCAST_IP_DEV_NETWORK, BROADCAST_DST_PORT)
+        SERVER_IP =  SERVER_IP_DEV_NETWORK
     elif server_addr == "test":
         BROADCAST_DST_ADDR = (BROADCAST_IP_TEST_NETWORK, BROADCAST_DST_PORT)
+        SERVER_IP = SERVER_IP_TEST_NETWORK
     else:
         BROADCAST_DST_ADDR = (BROADCAST_IP, BROADCAST_DST_PORT)
+        SERVER_IP = SERVER_IP_DEV_NETWORK
 
 
 if __name__ == "__main__":
