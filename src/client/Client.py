@@ -4,6 +4,8 @@ import socket
 import struct
 import sys
 
+from scapy.arch import get_if_addr
+
 TIMEOUT = 10
 
 BROADCAST_IP = "127.0.0.255"
@@ -129,9 +131,9 @@ def configure_game(server_addr=BROADCAST_IP):
     global BROADCAST_ADDR
     global SERVER_IP
     if server_addr == "eth1":
-        BROADCAST_ADDR = (BROADCAST_IP_ETH1_NETWORK, UDP_PORT)
-        SERVER_IP = SERVER_IP_ETH1_NETWORK
-    if server_addr == "eth2":
+        BROADCAST_ADDR = (BROADCAST_IP_ETH1_NETWORK, UDP_PORT) #(BROADCAST_IP_ETH1_NETWORK, UDP_PORT)
+        SERVER_IP = get_if_addr("eth1")
+    if server_addr == "eth0":
         BROADCAST_ADDR = (BROADCAST_IP_DEV_NETWORK, UDP_PORT)
         SERVER_IP = SERVER_IP_DEV_NETWORK
     elif server_addr == "test":

@@ -4,6 +4,8 @@ import sys
 import threading
 import time
 
+from scapy.arch import get_if_addr
+
 from Session import Session
 from Player import Player
 
@@ -121,8 +123,8 @@ def configure_game(server_addr=BROADCAST_IP):
     global SERVER_IP
     if server_addr == "eth1":
         BROADCAST_DST_ADDR = (BROADCAST_IP_ETH1_NETWORK, BROADCAST_DST_PORT)
-        SERVER_IP = SERVER_IP_ETH1_NETWORK
-    if server_addr == "eth2":
+        SERVER_IP = get_if_addr("eth1")
+    if server_addr == "eth0":
         BROADCAST_DST_ADDR = (BROADCAST_IP_DEV_NETWORK, BROADCAST_DST_PORT)
         SERVER_IP = SERVER_IP_DEV_NETWORK
     elif server_addr == "test":
