@@ -3,6 +3,7 @@ import select
 import time
 import random
 
+from Colors import Colors
 from Player import Player
 
 
@@ -19,6 +20,7 @@ class Session:
         self.the_question = None
         self.the_answer = None
         self.the_winner = None
+        self.winner_color = Colors.ENDC
 
     def set_up_math_question(self):
         math_questions = {}
@@ -86,9 +88,10 @@ class Session:
         self.send_handler(self.p2, message)
 
     def send_game_messages(self):
-        welcome_message = f'Welcome to Quick Maths.\nPlayer 1: {self.p1.name}Player 2: {self.p2.name}==\n' \
+        welcome_message = f'Welcome to Quick Maths.\n{Colors.OKBLUE}Player 1: {self.p1.name}' \
+                          f'{Colors.OKGREEN}Player 2: {self.p2.name}{Colors.ENDC}==\n' \
                           f'Please answer the following question as fast as you can:\n'
-        question = f"How much is {self.the_question}?"
+        question = f"How much is {Colors.OKCYAN}{self.the_question}{Colors.ENDC}?"
         message = welcome_message + question
         self.send_message_to_players(message)
 
@@ -111,12 +114,15 @@ class Session:
             actual = int(self.results.get(p)[0])
             if actual == self.the_answer:
                 self.the_winner = p.name
+                self.winner_color = Colors.OKBLUE if p == self.p1 else self.winner_color = Colors.OKGREEN
             else:
                 self.the_winner = self.p2.name if p == self.p1 else self.p1.name
+                self.winner_color = Colors.OKGREEN if p == self.p1 else self.winner_color = Colors.OKBLUE
 
     def send_result(self):
-        message = f"Game over!\nThe correct answer was  {self.the_answer}!\n\n" \
-                  f"Congratulations to the winner: {self.the_winner}\n"
+        message = f"{Colors.FAIL}Game over!{Colors.ENDC}\n" \
+                  f"The correct answer was  {Colors.OKGREEN}{self.the_answer}{Colors.ENDC}!\n\n" \
+                  f"Congratulations to the winner: {self.winner_color}{self.the_winner}{Colors.ENDC}\n"
         self.send_message_to_players(message)
 
     def begin_game(self):

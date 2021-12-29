@@ -3,6 +3,7 @@ import socket
 import threading
 import time
 
+from Colors import Colors
 from Session import Session
 from Player import Player
 
@@ -60,8 +61,8 @@ def open_tcp_server():
     server_socket.bind(SERVER_ADDR)
     # Queue up as many as 'MAX_CLIENTS' connect requests before refusing outside connections
     server_socket.listen(MAX_CLIENTS)
-    print(f'Server started, listening on IP address {SERVER_IP}')
-    print(f'Listening on port {SERVER_PORT} - debug message')  # TODO - debug message
+    print(f'{Colors.OKCYAN}Server started, listening on IP address {SERVER_IP}{Colors.ENDC}')
+    print(f'{Colors.WARNING}Listening on port {SERVER_PORT} - debug message{Colors.ENDC}')  # TODO - debug message
     return server_socket
 
 
@@ -104,7 +105,7 @@ def start() -> None:
         # All clients have connected, initialize game session
         session = Session(send_handler=send_to_client, receive_handler=receive_from_client, players=clients)
         session.begin_game()
-        print("Game over, sending out offer requests...")
+        print(f"{Colors.BOLD}Game over, sending out offer requests...{Colors.ENDC}")
         # Disconnect clients and clear the list
         for client in clients:
             client.socket.close()
@@ -115,4 +116,4 @@ if __name__ == "__main__":
     try:
         start()
     except KeyboardInterrupt:
-        print("Server stopped...")
+        print(f"{Colors.FAIL}Server stopped...{Colors.ENDC}")
