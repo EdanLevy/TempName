@@ -35,6 +35,13 @@ class Session:
         answer = sum(nums)
         math_questions[question] = answer
 
+        # Simple modulo
+        num = random.randint(0, 9)
+        den = random.randint(1, 9)
+        question = f'{num}%{den}'
+        answer = num % den
+        math_questions[question] = answer
+
         # Simple 'Ax+B' derivative
         deriv = random.randint(1, 9)
         free = random.randint(0, 9)
