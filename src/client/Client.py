@@ -4,7 +4,6 @@ import socket
 import sys
 import getch
 
-
 TIMEOUT = 10
 
 BROADCAST_IP = "127.0.0.255"
@@ -110,9 +109,9 @@ def main():
 # configure to a different server address to try to connect to other servers
 def configure_game(server_addr=BROADCAST_IP):
     global BROADCAST_ADDR
-    if server_addr is "dev":
+    if server_addr == "dev":
         BROADCAST_ADDR = (BROADCAST_IP_DEV_NETWORK, UDP_PORT)
-    elif server_addr is "test":
+    elif server_addr == "test":
         BROADCAST_ADDR = (BROADCAST_IP_TEST_NETWORK, UDP_PORT)
     else:
         BROADCAST_ADDR = (BROADCAST_IP, UDP_PORT)
