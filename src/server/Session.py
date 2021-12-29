@@ -113,7 +113,7 @@ class Session:
         self.send_message_to_players(message)
 
     def begin_game(self):
-
+        self.set_up_math_question()
         time.sleep(self.GAME_BEGINS_DELAY)
         self.send_game_messages()
         self.receive_answers()
