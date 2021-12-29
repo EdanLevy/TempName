@@ -45,7 +45,7 @@ accept_thread = None
 
 def send_broadcast(udp_socket):
     announcement_message = struct.pack('IBH', MAGIC_COOKIE, MESSAGE_TYPE, SERVER_PORT)
-    udp_socket.sendto(announcement_message[:OFFER_END_INDEX], ("255.255.255.255", 13117))
+    udp_socket.sendto(announcement_message[:OFFER_END_INDEX], BROADCAST_DST_ADDR)
 
 
 # accept client to the session if available, and wait to start the session
