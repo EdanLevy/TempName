@@ -81,7 +81,7 @@ class Session:
     def send_game_messages(self):
         welcome_message = f'Welcome to Quick Maths.\nPlayer 1: {self.p1.name}Player 2: {self.p2.name}==\n' \
                           f'Please answer the following question as fast as you can:\n'
-        question = "How much is " + self.the_question + "?"
+        question = f"How much is {self.the_question}?"
         message = welcome_message + question
         self.send_message_to_players(message)
 
