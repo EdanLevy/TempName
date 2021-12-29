@@ -38,7 +38,7 @@ class Session:
         # Simple 'Ax+B' derivative
         deriv = random.randint(1, 9)
         free = random.randint(0, 9)
-        free = f"+{free}" if free is not 0 else ""
+        free = f"+{free}" if free != 0 else ""
         question = f'({deriv}x{free})\''
         answer = deriv
         math_questions[question] = answer
@@ -63,7 +63,7 @@ class Session:
 
         # Hitchhiker's Guide to the Galaxy
         dig = random.randint(0, 1)
-        if dig is 0:
+        if dig == 0:
             question = "the answer to life, the universe, and everything (first digit)"
             answer = 4
         else:
@@ -72,7 +72,7 @@ class Session:
         math_questions[question] = answer
 
         self.the_question = random.choice(list(math_questions.keys()))
-        self.the_answer = math_questions[question]
+        self.the_answer = math_questions[self.the_question]
 
     def send_message_to_players(self, message: str):
         self.send_handler(self.p1, message)
