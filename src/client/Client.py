@@ -1,6 +1,7 @@
 import random
 import select
 import socket
+import struct
 import sys
 import getch
 
@@ -22,11 +23,11 @@ HOST_IP = socket.gethostbyname(socket.gethostname())  # Acquire local host IP ad
 
 IP_INDEX = 0  # In an address tuple, the IP is the first element
 
-MAGIC_COOKIE = b'\xab\xcd\xdc\xba'  # All broadcast offer messages MUST begin with this prefix
+MAGIC_COOKIE = 0xabcddcba  # All broadcast offer messages MUST begin with this prefix
 MAGIC_COOKIE_START = 0  # The index in the offer announcement where the magic cookie starts
 MAGIC_COOKIE_END = 4  # The index in the offer announcement where the magic cookie ends
 
-MESSAGE_TYPE = b'\x02'  # Specifies broadcast offer, no other message types are supported
+MESSAGE_TYPE = 0x2  # Specifies broadcast offer, no other message types are supported
 MESSAGE_TYPE_INDEX = 4  # The index in the offer announcement where the message type is
 
 SERVER_PORT_START = 5  # The index in the offer announcement where the server port starts
@@ -40,13 +41,14 @@ c_socket = None
 # checks if the offer is a valid offer
 def handle_offer(offer: bytes):
     global TCP_PORT
-    if not offer[MAGIC_COOKIE_START:MAGIC_COOKIE_END].__eq__(MAGIC_COOKIE):
+    mc, mt, pn = struct.unpack('IbH', offer)
+    if not mc == MAGIC_COOKIE:
         print("Offer doesn't start with magic cookie. Rejecting offer.")
         return False
-    if not offer[MESSAGE_TYPE_INDEX].__eq__(MESSAGE_TYPE):
+    if not mt == MESSAGE_TYPE:
         print("Message type not support. Rejecting offer.")
         return False
-    TCP_PORT = int.from_bytes(offer[SERVER_PORT_START:SERVER_PORT_END], "little")
+    TCP_PORT = pn
     if TCP_PORT < MIN_VALID_PORT:
         if TCP_PORT != 2085:
             print("Invalid port. Rejecting offer.")

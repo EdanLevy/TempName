@@ -1,5 +1,6 @@
 import random
 import socket
+import struct
 import sys
 import threading
 import time
@@ -27,8 +28,8 @@ BROADCAST_IP_DEV_NETWORK = "255.255.255.255"  # Dev network
 BROADCAST_IP_TEST_NETWORK = "172.99.255.255"  # Test network - only to be used when being graded
 BROADCAST_DST_ADDR = (BROADCAST_IP, BROADCAST_DST_PORT)
 
-MAGIC_COOKIE = b'\xab\xcd\xdc\xba'
-MESSAGE_TYPE = b'\x02'  # Specifies broadcast offer, no other message types are supported
+MAGIC_COOKIE = 0xabcddcba
+MESSAGE_TYPE = 0x2  # Specifies broadcast offer, no other message types are supported
 OFFER_END_INDEX = 8  # UDP broadcast offer messages are of fixed length 7
 
 MAX_CLIENTS = 2  # Amount of clients required to initiate a game session
@@ -39,7 +40,8 @@ accept_thread = None
 
 
 def send_broadcast(udp_socket):
-    announcement_message = MAGIC_COOKIE + MESSAGE_TYPE + SERVER_PORT.to_bytes(SERVER_PORT_LENGTH, "little")
+    print(sys.byteorder)
+    announcement_message = struct.pack('IbH', MAGIC_COOKIE, MESSAGE_TYPE, SERVER_PORT)
     udp_socket.sendto(announcement_message[:OFFER_END_INDEX], BROADCAST_DST_ADDR)
 
 
@@ -117,7 +119,7 @@ def configure_game(server_addr=BROADCAST_IP):
     global SERVER_IP
     if server_addr == "dev":
         BROADCAST_DST_ADDR = (BROADCAST_IP_DEV_NETWORK, BROADCAST_DST_PORT)
-        SERVER_IP =  SERVER_IP_DEV_NETWORK
+        SERVER_IP = SERVER_IP_DEV_NETWORK
     elif server_addr == "test":
         BROADCAST_DST_ADDR = (BROADCAST_IP_TEST_NETWORK, BROADCAST_DST_PORT)
         SERVER_IP = SERVER_IP_TEST_NETWORK
