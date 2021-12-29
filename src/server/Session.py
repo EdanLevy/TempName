@@ -121,7 +121,7 @@ class Session:
             if actual == self.the_answer:
                 self.the_winner = p.name
                 self.correct_answer = True
-                if float(self.delta) < self.statistics[1]:
+                if self.delta.real < self.statistics[1]:
                     self.statistics[0] = p.name
                     self.statistics[1] = self.delta
             else:
