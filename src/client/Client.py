@@ -87,16 +87,21 @@ def main():
         offer_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         offer_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         offer_socket.bind(BROADCAST_ADDR)
-        offer, server_address = offer_socket.recvfrom(8)
-        SERVER_IP = server_address[IP_INDEX]
-        offer_socket.close()
-        # try to connect to server
-        print(f"Received offer from {SERVER_IP}, attempting to connect...")
-        print(offer)
-        result = handle_offer(offer)
-        # if the offer is invalid then the client continues to look for other offers
-        if not result:
-            continue
+
+        try:
+            offer, server_address = offer_socket.recvfrom(8)
+            SERVER_IP = server_address[IP_INDEX]
+            offer_socket.close()
+            # try to connect to server
+            print(f"Received offer from {SERVER_IP}, attempting to connect...")
+            print(offer)
+            result = handle_offer(offer)
+            # if the offer is invalid then the client continues to look for other offers
+            if not result:
+                continue
+        except socket.error:
+            print("cannot receive offer")
+
         # requesting a socket for tcp connection and setting it to false
         c_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:  # try to connect to server. will get excepted if server refused to establish connection
