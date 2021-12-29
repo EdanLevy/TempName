@@ -11,7 +11,7 @@ from Player import Player
 REBROADCAST_TIMEOUT = 1  # Broadcast announcement timeout after which another broadcast is sent (1 second)
 
 SERVER_IP = "127.0.0.1"  # Acquire local host IP address
-SERVER_IP_DEV_NETWORK = "172.18.0.90"  # Dev network
+SERVER_IP_DEV_NETWORK = "172.1.0.90"  # Dev network
 SERVER_IP_TEST_NETWORK = "172.99.0.90"  # Test network - only to be used when being graded
 
 BROADCAST_DST_PORT = 13117  # Fixed port number, as defined in the packet formats
