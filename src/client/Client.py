@@ -55,7 +55,7 @@ def handle_offer(offer: bytes):
         if TCP_PORT < MIN_VALID_PORT:
             print("Invalid port. Rejecting offer.")
             return False
-    except struct.error as e:
+    except struct.error or OverflowError as e:
         print(f"cannot unpack message {e}")
     return True
 
