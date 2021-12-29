@@ -53,9 +53,8 @@ def handle_offer(offer: bytes):
         return False
     TCP_PORT = int(message[2])
     if TCP_PORT < MIN_VALID_PORT:
-        if TCP_PORT != 2085:
-            print("Invalid port. Rejecting offer.")
-            return False
+        print("Invalid port. Rejecting offer.")
+        return False
     return True
 
 
