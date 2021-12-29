@@ -51,7 +51,6 @@ def accept_client(connection_socket, address):
     team_name = connection_socket.recv(1024).decode()  # First message from client is their team name
     connection_socket.setblocking(False)
     if len(clients) < MAX_CLIENTS:
-        # print(f"accepted client: {len(clients) + 1} - debug message")  # TODO - debug message
         clients.append(Player(socket=connection_socket, address=address, name=team_name))
 
 
@@ -64,7 +63,6 @@ def open_tcp_server():
     # Queue up as many as 'MAX_CLIENTS' connect requests before refusing outside connections
     server_socket.listen(MAX_CLIENTS)
     print(f'Server started, listening on IP address {SERVER_IP}')
-    # print(f'Listening on port {SERVER_PORT} - debug message')  # TODO - debug message
     return server_socket
 
 
