@@ -3,6 +3,8 @@ import select
 import socket
 import sys
 
+from Colors import Colors
+
 TIMEOUT = 10
 
 BROADCAST_IP = "127.0.0.255"
@@ -69,7 +71,7 @@ def start_game(sock):
 def main():
     global c_socket
     global SERVER_IP
-    print("Client started, listening for offer requests...")
+    print(f"{Colors.OKCYAN}Client started, listening for offer requests...{Colors.ENDC}")
     # print(f'Listening on address {HOST} : {UDP_PORT} - debug message')  # TODO - debug message
     while True:
         # listen to UDP offers
@@ -83,7 +85,7 @@ def main():
         # print(f"incoming offer: {offer} - debug message")  # TODO - debug message
         offer_socket.close()
         # try to connect to server
-        print(f"Received offer from {SERVER_IP}, attempting to connect...")
+        print(f"Received offer from {Colors.WARNING}{SERVER_IP}{Colors.ENDC}, attempting to connect...")
         result = handle_offer(offer)
         # if the offer is invalid then the client continues to look for other offers
         if not result:
