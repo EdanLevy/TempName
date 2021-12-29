@@ -1,3 +1,4 @@
+import datetime
 import math
 import select
 import time
@@ -10,15 +11,22 @@ class Session:
     GAME_BEGINS_DELAY = 10
     GAME_TIMEOUT = 10
 
-    def __init__(self, send_handler, receive_handler, players):
-        self.p1 = players[0]
-        self.p2 = players[1]
+    def __init__(self, send_handler, receive_handler):
+        self.p1 = None
+        self.p2 = None
         self.receive_handler = receive_handler
         self.send_handler = send_handler
-        self.results = {self.p1: [], self.p2: []}  # Initialize dictionary that contains results regarding each player
+        self.results = None
         self.the_question = None
         self.the_answer = None
         self.the_winner = None
+        self.delta = float('inf')
+        self.statistics = [None, float('inf')]
+
+    def initialize_session(self, players):
+        self.p1 = players[0]
+        self.p2 = players[1]
+        self.results = {self.p1: [], self.p2: []}  # Clear dictionary for new session
 
     def set_up_math_question(self):
         math_questions = {}
@@ -111,17 +119,25 @@ class Session:
             actual = int(self.results.get(p)[0])
             if actual == self.the_answer:
                 self.the_winner = p.name
+                if self.delta < self.statistics[1]:
+                    self.statistics[0] = p.name
+                    self.statistics[1] = self.delta
             else:
                 self.the_winner = self.p2.name if p == self.p1 else self.p1.name
 
     def send_result(self):
         message = f"Game over!\nThe correct answer was  {self.the_answer}!\n\n" \
-                  f"Congratulations to the winner: {self.the_winner}\n"
+                  f"Congratulations to the winner: {self.the_winner}\n" \
+                  f"The answer was given in {self.delta}\n" \
+                  f"Best team to answer a question correctly was {self.statistics[0]} in {self.statistics[1]}!\n"
         self.send_message_to_players(message)
 
-    def begin_game(self):
+    def begin_game(self, players):
+        self.initialize_session(players)
         self.set_up_math_question()
         time.sleep(self.GAME_BEGINS_DELAY)
         self.send_game_messages()
+        start = datetime.datetime.now()
         self.receive_answers()
+        self.delta = datetime.datetime.now() - start
         self.send_result()

@@ -88,6 +88,7 @@ def receive_from_client(conn):
 def start() -> None:
     global accept_thread
     server_socket = open_tcp_server()
+    session = Session(send_handler=send_to_client, receive_handler=receive_from_client)
     while True:
         # Create a socket instance whose address-family is AF_INET (IPv4)
         # and socket kind is SOCK_DGRAM (connectionless UDP)
@@ -102,8 +103,7 @@ def start() -> None:
             time.sleep(REBROADCAST_TIMEOUT)
         broadcast_socket.close()
         # All clients have connected, initialize game session
-        session = Session(send_handler=send_to_client, receive_handler=receive_from_client, players=clients)
-        session.begin_game()
+        session.begin_game(clients)
         print("Game over, sending out offer requests...")
         # Disconnect clients and clear the list
         for client in clients:
