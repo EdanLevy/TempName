@@ -1,4 +1,3 @@
-import random
 import socket
 import struct
 import sys
@@ -16,10 +15,10 @@ SERVER_IP_DEV_NETWORK = "172.18.0.90"  # Dev network
 SERVER_IP_TEST_NETWORK = "172.99.0.90"  # Test network - only to be used when being graded
 
 BROADCAST_DST_PORT = 13117  # Fixed port number, as defined in the packet formats
-BROADCAST_SRC_PORT = random.randint(1024, 65535)  # The port from which to send out offer announcements
+BROADCAST_SRC_PORT = 0  # The port from which to send out offer announcements
 
 # The port from which the server will listen for incoming client connections
-SERVER_PORT = random.choice([i for i in range(1024, 65535) if i not in [BROADCAST_SRC_PORT]])
+SERVER_PORT = 2090
 SERVER_PORT_LENGTH = 2  # Port is 2 bytes (16 bits) long
 
 SERVER_ADDR = (SERVER_IP, SERVER_PORT)
