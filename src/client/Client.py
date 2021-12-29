@@ -55,7 +55,8 @@ def handle_offer(offer: bytes):
             print("Invalid port. Rejecting offer.")
             return False
     except struct.error or OverflowError or OSError as e:
-        print(f"cannot unpack message {e}")
+        print(f"cannot unpack message")
+        return False
     return True
 
 
@@ -99,6 +100,7 @@ def main():
                 continue
         except socket.error:
             print("cannot receive offer")
+            continue
 
         # requesting a socket for tcp connection and setting it to false
         c_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -109,10 +111,10 @@ def main():
         except socket.error:  # handling the exception for not connecting to server
             c_socket.close()
             print("Server disconnected, listening for offer requests...")
+            continue
         try:
             print(c_socket.recv(1024).decode())  # Wait until receiving welcome message and math problem and print it
         except socket.error as e:
-            print(e)
             continue
         c_socket.setblocking(False)
         start_game(c_socket)
