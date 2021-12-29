@@ -43,9 +43,7 @@ c_socket = None
 def handle_offer(offer: bytes):
     global TCP_PORT
     try:
-        print(offer)
         message = struct.unpack('IbH', offer)
-        print(message)
         if not message[0] == MAGIC_COOKIE:
             print("Offer doesn't start with magic cookie. Rejecting offer.")
             return False
