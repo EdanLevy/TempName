@@ -77,7 +77,11 @@ def send_to_client(client: Player, message: str) -> None:
 
 
 def receive_from_client(conn):
-    message = conn.recv(ANSWER_LENGTH).decode()  # TODO - switch to 'getch'?
+    # If function is interrupted due to socket closing prematurely return an empty message
+    try:
+        message = conn.recv(ANSWER_LENGTH).decode()  # TODO - switch to 'getch'?
+    except socket.error:
+        message = ""
     return message
 
 

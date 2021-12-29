@@ -99,6 +99,7 @@ def main():
             # print("connection failed, server refused to accept more clients - debug message")  # TODO - debug message
             c_socket.close()
             print("Server disconnected, listening for offer requests...")
+        # TODO - try except
         print(c_socket.recv(1024).decode())  # Wait until receiving welcome message and math problem and print it
         c_socket.setblocking(False)
         start_game(c_socket)

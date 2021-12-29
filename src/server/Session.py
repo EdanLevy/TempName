@@ -96,9 +96,9 @@ class Session:
         read_ready, _, _ = select.select([self.p1.socket, self.p2.socket], [], [], self.GAME_TIMEOUT)
         player = None
         for sock in read_ready:
-            answer = "a"  # default non-numeric value to allow entrance to the while loop
+            answer = ""  # default non-numeric value to allow entrance to the while loop
             player = self.p1 if sock is self.p1.socket else self.p2
-            while not answer[0].isnumeric():
+            while not len(answer) == 0 and not answer[0].isdigit():
                 answer = self.receive_handler(sock)
             self.results.get(player).append(answer)
             break  # Once 1 player has sent an answer, the game is decided
