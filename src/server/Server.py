@@ -61,7 +61,7 @@ def open_tcp_server():
     # Queue up as many as 'MAX_CLIENTS' connect requests before refusing outside connections
     server_socket.listen(MAX_CLIENTS)
     print(f'Server started, listening on IP address {SERVER_IP}')
-    print(f'Listening on port {SERVER_PORT} - debug message')  # TODO - debug message
+    # print(f'Listening on port {SERVER_PORT} - debug message')  # TODO - debug message
     return server_socket
 
 
