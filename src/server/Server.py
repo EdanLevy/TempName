@@ -69,6 +69,7 @@ def open_tcp_server():
 
 def listen_for_clients(server_socket):
     while len(clients) < MAX_CLIENTS:
+        print ("2")
         conn, address = server_socket.accept()
         accept_client(conn, address)
 
@@ -101,6 +102,7 @@ def start() -> None:
         accept_thread = threading.Thread(target=listen_for_clients, args=[server_socket], daemon=True).start()
         # Meanwhile, send offer announcements
         while len(clients) < MAX_CLIENTS:
+            print ("1")
             send_broadcast(broadcast_socket)
             time.sleep(REBROADCAST_TIMEOUT)
         broadcast_socket.close()
