@@ -20,6 +20,7 @@ class Session:
         self.the_question = None
         self.the_answer = None
         self.the_winner = None
+        self.correct_answer = False
         self.delta = float('inf')
         self.statistics = [None, float('inf')]
 
@@ -119,6 +120,7 @@ class Session:
             actual = int(self.results.get(p)[0])
             if actual == self.the_answer:
                 self.the_winner = p.name
+                self.correct_answer = True
                 if float(self.delta) < self.statistics[1]:
                     self.statistics[0] = p.name
                     self.statistics[1] = self.delta
@@ -126,10 +128,11 @@ class Session:
                 self.the_winner = self.p2.name if p == self.p1 else self.p1.name
 
     def send_result(self):
-        message = f"Game over!\nThe correct answer was  {self.the_answer}!\n\n" \
-                  f"Congratulations to the winner: {self.the_winner}\n" \
-                  f"The answer was given in {self.delta}\n" \
-                  f"Best team to answer a question correctly was {self.statistics[0]} in {self.statistics[1]}!\n"
+        summary_message = f"Game over!\nThe correct answer was  {self.the_answer}!\n\n" \
+                          f"Congratulations to the winner: {self.the_winner}\n"
+        answer_time = f"The answer was given in {self.delta}\n" if self.correct_answer is True else ""
+        best_team = f"Best team to answer a question correctly was {self.statistics[0]} in {self.statistics[1]}!\n"
+        message = summary_message + answer_time + best_team
         self.send_message_to_players(message)
 
     def begin_game(self, players):
